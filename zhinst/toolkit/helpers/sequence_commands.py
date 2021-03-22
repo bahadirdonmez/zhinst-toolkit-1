@@ -92,8 +92,8 @@ class SequenceCommand(object):
         if length % 16:
             raise ValueError("Buffer Length has to be multiple of 16!")
         return (
-            f"wave w{i + 1}_1 = randomUniform({length});\n"
-            f"wave w{i + 1}_2 = randomUniform({length});\n"
+            f"wave w{i + 1}_1 = placeholder({length});\n"
+            f"wave w{i + 1}_2 = placeholder({length});\n"
         )
 
     @staticmethod
