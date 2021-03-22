@@ -121,9 +121,21 @@ class Sequence(object):
             self.trigger_cmd_2 = SequenceCommand.comment_line()
             self.dead_cycles = 0
 
-    def time_to_cycles(self, time, wait_time=True):
-        """Helper method to convert time to FPGA clock cycles."""
-        if wait_time:
+    def time_to_cycles(self, time, wait_simple=False):
+        """Helper method to convert time to clock cycles.
+
+        If the argument `wait_simple` isn't passed in, the sampling
+        rate of the device is used as clock rate by default.
+
+        Parameters
+        ----------
+        wait_simple : bool, optional
+            Option to choose whether to return the number of cycles
+            in terms of sequencer rate instead of sampling rate
+            (default is False)
+        """
+
+        if wait_simple:
             return int(time * self.clock_rate / 8)
         else:
             return int(time * self.clock_rate)
