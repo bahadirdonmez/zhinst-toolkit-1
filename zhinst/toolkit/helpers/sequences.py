@@ -170,7 +170,7 @@ class Sequence(object):
 class SimpleSequence(Sequence):
     """Sequence for *simple* playback of waveform arrays.
 
-    Initializes placeholders (`randomUniform(...)`) of the correct length for 
+    Initializes placeholders (`placeholder(...)`) of the correct length for 
     the waveforms in the queue of the AWG Core. The data of the waveform 
     placeholders is then replaced in memory when uploading the waveform using 
     `upload_waveforms()`. The waveforms are played sequentially within the main 
