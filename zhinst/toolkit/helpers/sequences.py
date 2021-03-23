@@ -106,6 +106,10 @@ class Sequence(object):
 
     def update_params(self):
         """Update interrelated parameters."""
+        if self.target in [DeviceTypes.HDAWG]:
+            self.clock_rate = 2.4e9
+        elif self.target in [DeviceTypes.UHFLI, DeviceTypes.UHFQA]:
+            self.clock_rate = 1.8e9
         if self.trigger_mode == TriggerMode.NONE:
             self.trigger_cmd_1 = SequenceCommand.comment_line()
             self.trigger_cmd_2 = SequenceCommand.comment_line()
@@ -250,8 +254,6 @@ class SimpleSequence(Sequence):
         if len(self.buffer_lengths) > len(self.delay_times):
             n = len(self.buffer_lengths) - len(self.delay_times)
             self.delay_times = np.append(self.delay_times, np.zeros(n))
-        if self.target in [DeviceTypes.UHFQA, DeviceTypes.UHFLI]:
-            self.clock_rate = 1.8e9
 
     def check_attributes(self):
         super().check_attributes()
@@ -623,8 +625,6 @@ class ReadoutSequence(Sequence):
             self.wait_cycles = self.time_to_cycles(
                 temp - self.latency + self.trigger_delay
             )
-        if self.target in [DeviceTypes.UHFQA, DeviceTypes.UHFLI]:
-            self.clock_rate = 1.8e9
         len_f = len(self.readout_frequencies)
         len_a = len(self.readout_amplitudes)
         len_p = len(self.phase_shifts)
@@ -703,8 +703,6 @@ class PulsedSpectroscopySequence(Sequence):
             self.wait_cycles = self.time_to_cycles(
                 temp - self.latency + self.trigger_delay
             )
-        if self.target in [DeviceTypes.UHFQA, DeviceTypes.UHFLI]:
-            self.clock_rate = 1.8e9
 
 
 @attr.s
