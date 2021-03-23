@@ -5,6 +5,7 @@
 
 from datetime import datetime
 import numpy as np
+import deprecation
 
 
 class SequenceCommand(object):
@@ -49,6 +50,12 @@ class SequenceCommand(object):
     def wait_wave():
         return "waitWave();\n"
 
+    @deprecation.deprecated(
+        deprecated_in="v0.1.5", removed_in="v0.1.6",
+        current_version=__version__,
+        details="Use the define_trigger and play_trigger functions instead"
+    )
+
     @staticmethod
     def trigger(value, index=1):
         if value not in [0, 1]:
@@ -56,6 +63,22 @@ class SequenceCommand(object):
         if index not in [1, 2]:
             raise ValueError("Invalid Trigger Index!")
         return f"setTrigger({value << (index - 1)});\n"
+   
+    @staticmethod
+    def define_trigger(length=32):
+        if length < 32:
+            raise ValueError("Trigger cannot be shorter than 32 samples!")
+        if length % 16:
+            raise ValueError("Trigger Length has to be multiple of 16!")
+        return f"wave start_trigger = marker({length},1);\n"
+    
+    @staticmethod
+    def play_trigger(index=1):
+        if index not in [1, 2]:
+            raise ValueError(
+                "Invalid Trigger Index! Valid values are from 1 to 2"
+            )
+        return f"playWave({index}, start_trigger);\n"
 
     @staticmethod
     def count_waveform(i, n):
