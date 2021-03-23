@@ -106,6 +106,10 @@ class Sequence(object):
 
     def update_params(self):
         """Update interrelated parameters."""
+        if self.target in [DeviceTypes.HDAWG]:
+            self.clock_rate = 2.4e9
+        elif self.target in [DeviceTypes.UHFLI, DeviceTypes.UHFQA]:
+            self.clock_rate = 1.8e9
         if self.trigger_mode == TriggerMode.NONE:
             self.trigger_cmd_1 = SequenceCommand.comment_line()
             self.trigger_cmd_2 = SequenceCommand.comment_line()
