@@ -33,8 +33,8 @@ class Sequence(object):
         trigger_mode (str or :class:`TriggerMode` enum): The trigger mode of the 
             sequence, i.e if the AWG Core is used to send out the triger signal 
             (*'Send Triger'* or :class:`TriggerMode.SEND_TRIGGER`) or to wait 
-            for an external trigger signal (*'External Triger'* or 
-            :class:`TriggerMode.EXTERNAL_TRIGGER`). (default: 
+            for an external trigger signal (*'Receive Triger'* or 
+            :class:`TriggerMode.RECEIVE_TRIGGER`). (default: 
             :class:`TriggerMode.NONE`) 
         repetitions (int): The number of repetitions of the experiment.
         alignment (str): The alignment of the played waveform with the trigger 
@@ -119,7 +119,7 @@ class Sequence(object):
             self.trigger_cmd_1 = SequenceCommand.trigger(1)
             self.trigger_cmd_2 = SequenceCommand.trigger(0)
             self.dead_cycles = self.time_to_cycles(self.dead_time)
-        elif self.trigger_mode == TriggerMode.EXTERNAL_TRIGGER:
+        elif self.trigger_mode == TriggerMode.RECEIVE_TRIGGER:
             self.trigger_cmd_1 = SequenceCommand.wait_dig_trigger(
                 index=int(self.target in [DeviceTypes.UHFQA, DeviceTypes.UHFLI])
             )
@@ -251,7 +251,7 @@ class SimpleSequence(Sequence):
             self.wait_cycles = self.time_to_cycles(self.period)
         elif self.trigger_mode == TriggerMode.SEND_TRIGGER:
             self.wait_cycles = self.time_to_cycles(self.period - self.dead_time)
-        elif self.trigger_mode == TriggerMode.EXTERNAL_TRIGGER:
+        elif self.trigger_mode == TriggerMode.RECEIVE_TRIGGER:
             self.wait_cycles = self.time_to_cycles(
                 self.period - self.dead_time - self.latency + self.trigger_delay
             )
@@ -375,7 +375,7 @@ class RabiSequence(Sequence):
                 self.wait_cycles -= self.gauss_params[0] / 8
             elif self.alignment == Alignment.START_WITH_TRIGGER:
                 self.dead_cycles -= self.gauss_params[0] / 8
-        elif self.trigger_mode == TriggerMode.EXTERNAL_TRIGGER:
+        elif self.trigger_mode == TriggerMode.RECEIVE_TRIGGER:
             self.wait_cycles = self.time_to_cycles(
                 self.period - self.dead_time - self.latency + self.trigger_delay
             )
@@ -455,7 +455,7 @@ class T1Sequence(Sequence):
         self.get_gauss_params(self.pulse_width, self.pulse_truncation)
         if self.trigger_mode in [TriggerMode.NONE, TriggerMode.SEND_TRIGGER]:
             self.wait_cycles = self.time_to_cycles(self.period - self.dead_time)
-        elif self.trigger_mode == TriggerMode.EXTERNAL_TRIGGER:
+        elif self.trigger_mode == TriggerMode.RECEIVE_TRIGGER:
             self.wait_cycles = self.time_to_cycles(
                 self.period - self.dead_time - self.latency + self.trigger_delay
             )
@@ -632,7 +632,7 @@ class ReadoutSequence(Sequence):
             self.wait_cycles = self.time_to_cycles(temp)
         elif self.trigger_mode == TriggerMode.SEND_TRIGGER:
             self.wait_cycles = self.time_to_cycles(temp)
-        elif self.trigger_mode == TriggerMode.EXTERNAL_TRIGGER:
+        elif self.trigger_mode == TriggerMode.RECEIVE_TRIGGER:
             self.wait_cycles = self.time_to_cycles(
                 temp - self.latency + self.trigger_delay
             )
@@ -712,7 +712,7 @@ class PulsedSpectroscopySequence(Sequence):
             self.wait_cycles = self.time_to_cycles(temp)
         elif self.trigger_mode == TriggerMode.SEND_TRIGGER:
             self.wait_cycles = self.time_to_cycles(temp)
-        elif self.trigger_mode == TriggerMode.EXTERNAL_TRIGGER:
+        elif self.trigger_mode == TriggerMode.RECEIVE_TRIGGER:
             self.wait_cycles = self.time_to_cycles(
                 temp - self.latency + self.trigger_delay
             )
@@ -746,7 +746,7 @@ class CWSpectroscopySequence(Sequence):
             self.wait_cycles = self.time_to_cycles(self.period - self.dead_time)
         elif self.trigger_mode == TriggerMode.SEND_TRIGGER:
             self.wait_cycles = self.time_to_cycles(self.period - self.dead_time)
-        elif self.trigger_mode == TriggerMode.EXTERNAL_TRIGGER:
+        elif self.trigger_mode == TriggerMode.RECEIVE_TRIGGER:
             self.wait_cycles = self.time_to_cycles(
                 self.period - self.dead_time - self.latency + self.trigger_delay
             )
